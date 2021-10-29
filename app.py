@@ -57,7 +57,7 @@ def get_products():
 # User
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    email = db.Column(db.String(100), unique=False)
+    email = db.Column(db.String(100), unique=True)
     password = db.Column(db.String(20), unique=False)
 
     def __init__(self, email, password):
