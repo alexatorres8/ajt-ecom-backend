@@ -26,7 +26,7 @@ class Product(db.Model):
 
 class ProductSchema(ma.Schema):
     class Meta:
-        fields = ('title', 'price')
+        fields = ('id', 'title', 'price')
 
 product_schema = ProductSchema()
 products_schema = ProductSchema(many=True)
