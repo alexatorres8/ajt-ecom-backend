@@ -14,43 +14,49 @@ ma = Marshmallow(app)
 
 CORS(app)
 
-# Product
-class Product(db.Model):
+# Items
+class Item(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(100), nullable=False)
     price = db.Column(db.Float, nullable=False)
+    image = db.Column(db.String(300), nullable=False)
+    description = db.Column(db.String(200), nullable=False)
 
-    def __init__(self, title, price):
+    def __init__(self, title, price, image, description):
         self.title = title
         self.price = price
+        self.image = image
+        self.description = description
 
-class ProductSchema(ma.Schema):
+class ItemSchema(ma.Schema):
     class Meta:
-        fields = ('id', 'title', 'price')
+        fields = ('id', 'title', 'price', 'image', 'description')
 
-product_schema = ProductSchema()
-products_schema = ProductSchema(many=True)
+item_schema = ItemSchema()
+items_schema = ItemSchema(many=True)
 
-# Endpoint to create a new product
-@app.route('/product', methods=["POST"])
-def add_product():
+# Endpoint to create a new item
+@app.route('/item', methods=["POST"])
+def add_item():
     title = request.json['title']
     price = request.json['price']
+    image = request.json['image']
+    description = request.json['description']
 
-    new_product = Product(title, price)
+    new_item = Item(title, price, image, description)
 
-    db.session.add(new_product)
+    db.session.add(new_item)
     db.session.commit()
 
-    product = Product.query.get(new_product.id)
+    item = Item.query.get(new_item.id)
 
-    return product_schema.jsonify(product)
+    return item_schema.jsonify(item)
 
-# Endpoint to query all products
-@app.route("/products", methods=["GET"])
-def get_products():
-    all_products = Product.query.all()
-    result = products_schema.dump(all_products)
+# Endpoint to query all items
+@app.route("/items", methods=["GET"])
+def get_items():
+    all_items = Item.query.all()
+    result = items_schema.dump(all_items)
     return jsonify(result)
 
 if __name__ == '__main__':
